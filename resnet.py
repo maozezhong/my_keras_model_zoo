@@ -14,10 +14,10 @@ import keras.layers as layers
 import keras.models as models
 
 # I use the 'resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5'
-# thus, change mode to 'tf'
+# thus, change mode to 'tf', nerver mind , let's try origin mode caffe in keras source code....
 # download_link : https://github.com/fchollet/deep-learning-models/releases
 def preprocess_input(x):
-    return imagenet_utils.preprocess_input(x, mode='tf')
+    return imagenet_utils.preprocess_input(x, mode='caffe')
 
 def identity_block(input_tensor, kernel_size, filters, stage, block, bn_axis, bottleneck=True):
     """The identity block is the block that has no conv layer at shortcut.

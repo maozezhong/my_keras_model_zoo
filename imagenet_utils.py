@@ -62,8 +62,11 @@ def _preprocess_numpy_input(x, data_format, mode, **kwargs):
         else:
             # 'RGB'->'BGR'
             x = x[..., ::-1]
-        mean = [103.939, 116.779, 123.68]
-        std = None
+        #mean = [103.939, 116.779, 123.68]
+        #std = None
+        mean = [0.0807442, 0.05291834, 0.05484554, 0.08301514]
+        std = [0.13703616, 0.10183576, 0.1531708,  0.138325]
+
 
     # Zero-center by mean pixel
     if data_format == 'channels_first':
@@ -87,10 +90,12 @@ def _preprocess_numpy_input(x, data_format, mode, **kwargs):
         x[..., 0] -= mean[0]
         x[..., 1] -= mean[1]
         x[..., 2] -= mean[2]
+        x[..., 3] -= mean[3]
         if std is not None:
             x[..., 0] /= std[0]
             x[..., 1] /= std[1]
             x[..., 2] /= std[2]
+            x[..., 3] /= std[3]
     return x
 
 

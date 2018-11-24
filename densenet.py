@@ -87,7 +87,7 @@ def conv_block(x, growth_rate, name, bn_axis):
 
 class DenseNet(object):
 
-    def DenseNet(self,
+    def build(self,
                  blocks,
                  input_shape=None,
                  data_format='channels_last',

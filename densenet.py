@@ -14,8 +14,8 @@
 """
 import os
 from . import imagenet_utils
-from keras.layers as layers
-from keras.models as models
+import keras.layers as layers
+import keras.models as models
 import keras.backend as backend
 
 def preprocess_input(x, data_format=None, **kwargs):

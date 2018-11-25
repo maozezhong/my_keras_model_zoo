@@ -21,7 +21,7 @@ import keras.backend as backend
 def preprocess_input(x, data_format=None, **kwargs):
     return imagenet_utils.preprocess_input(x)
 
-def dense_block(x, blocks, name):
+def dense_block(x, blocks, name, bn_axis):
     """A dense block.
 
     # Arguments
@@ -33,7 +33,7 @@ def dense_block(x, blocks, name):
         output tensor for the block.
     """
     for i in range(blocks):
-        x = conv_block(x, 32, name=name + '_block' + str(i + 1))
+        x = conv_block(x, 32, name=name + '_block' + str(i + 1), bn_axis=bn_axis)
     return x
 
 
@@ -129,13 +129,13 @@ class DenseNet(object):
 
         # Create model.
         if blocks == [6, 12, 24, 16]:
-            model = models.Model(inputs, x, name='densenet121')
+            model = models.Model(img_input, x, name='densenet121')
         elif blocks == [6, 12, 32, 32]:
-            model = models.Model(inputs, x, name='densenet169')
+            model = models.Model(img_input, x, name='densenet169')
         elif blocks == [6, 12, 48, 32]:
-            model = models.Model(inputs, x, name='densenet201')
+            model = models.Model(img_input, x, name='densenet201')
         else:
-            model = models.Model(inputs, x, name='densenet')
+            model = models.Model(img_input, x, name='densenet')
 
         return model
 
@@ -168,7 +168,7 @@ class DenseNet(object):
                            data_format=data_format,
                            pooling=pooling)
         if weights:
-            if not os.path.exits(weights):
+            if not os.path.exists(weights):
                 raise('no such path {}'.format(weights))
             model.load_weights(weights, by_name=True if input_shape[2] == 4 else False)
         return model
@@ -184,7 +184,7 @@ class DenseNet(object):
                            data_format=data_format,
                            pooling=pooling)
         if weights:
-            if not os.path.exits(weights):
+            if not os.path.exists(weights):
                 raise('no such path {}'.format(weights))
             model.load_weights(weights, by_name=True if input_shape[2] == 4 else False)
         return model

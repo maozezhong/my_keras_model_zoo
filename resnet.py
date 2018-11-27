@@ -197,11 +197,11 @@ class ResNet(object):
                            strides=(1, 1) if i == 0 else (2, 2),
                            bottleneck=bottleneck)
             # loop for rest block in i-th stage
-            for ii in range(num-1):
-                block_name = block_names[ii+1]
+            for ii in range(1, num):
+                #block_name = block_names[ii+1]
                 x = identity_block(x, 3, [base_num1, base_num1, base_num2],
                                    stage=stage,
-                                   block=block_name,
+                                   block='b'+str(ii) if (repetitions[2] > 6 and stage in [3,4]) else block_names[ii],    #res50（包括50）以下按照keras内置的命名格式，res50以上则按照权值文件的命名格式，参考：https://github.com/GKalliatakis/Keras-Application-Zoo/blob/master/resnet101.py
                                    bn_axis=bn_axis,
                                    bottleneck=bottleneck)
             base_num1 = 2 * base_num1
@@ -280,7 +280,7 @@ class ResNet(object):
                            repetitions=[3, 4, 23, 3],
                            model_name='resnet101')
         if weights:
-            if not os.path.exits(weights):
+            if not os.path.exists(weights):
                 raise('no such path {}'.format(weights))
             model.load_weights(weights)
         return model
@@ -296,7 +296,7 @@ class ResNet(object):
                            repetitions=[3, 8, 36, 3],
                            model_name='resnet152')
         if weights:
-            if not os.path.exits(weights):
+            if not os.path.exists(weights):
                 raise('no such path {}'.format(weights))
             model.load_weights(weights)
         return model

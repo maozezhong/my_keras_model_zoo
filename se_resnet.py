@@ -19,7 +19,7 @@ import keras.models as models
 def preprocess_input(x):
     return imagenet_utils.preprocess_input(x, mode='caffe')
 
-def squeeze_excitation_layer(x, out_dim, ratio=16):
+def squeeze_excitation_layer(x, out_dim, stage, block, ratio=16):
     '''
         SE channel attention
         input:
@@ -28,8 +28,8 @@ def squeeze_excitation_layer(x, out_dim, ratio=16):
             ratio : reduction rate, defualt 16
     '''
     squeeze = layers.GlobalAveragePooling2D()(x)
-    excitation = layers.Dense(out_dim//ratio, activation='relu')(squeeze)
-    excitation = layers.Dense(out_dim, activation='sigmoid')
+    excitation = layers.Dense(out_dim//ratio, activation='relu', name='se_dense1_'+str(stage)+block)(squeeze)
+    excitation = layers.Dense(out_dim, activation='sigmoid', name='se_dense2_'+str(stage)+block)(excitation)
     excitation = layers.Reshape((1, 1, out_dim))(excitation)
 
     scale = layers.multiply([x, excitation])
@@ -86,7 +86,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, bn_axis, bo
                           name=conv_name_base + '2b')(x)
         x = layers.BatchNormalization(axis=bn_axis, name=bn_name_base + '2b')(x)
 
-    scaled_x = squeeze_excitation_layer(x, x.shape[-1])
+    scaled_x = squeeze_excitation_layer(x, int(x.shape[-1]), stage, block)
     x = layers.add([scaled_x, input_tensor])
     x = layers.Activation('relu')(x)
     return x
@@ -165,7 +165,7 @@ def conv_block(input_tensor,
         shortcut = layers.BatchNormalization(
             axis=bn_axis, name=bn_name_base + '1')(shortcut)
 
-    scaled_x = squeeze_excitation_layer(x, x.shape[-1])
+    scaled_x = squeeze_excitation_layer(x, int(x.shape[-1]), stage, block)
     x = layers.add([scaled_x, shortcut])
     x = layers.Activation('relu')(x)
     return x

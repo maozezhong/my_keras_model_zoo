@@ -64,9 +64,13 @@ def _preprocess_numpy_input(x, data_format, mode, **kwargs):
             x = x[..., ::-1]
         #mean = [103.939, 116.779, 123.68]
         #std = None
+        '''
+        size=256
         mean = [0.0807442, 0.05291834, 0.05484554, 0.08301514]
         std = [0.13703616, 0.10183576, 0.1531708,  0.138325]
-
+        '''
+        mean = [0.08185924, 0.05401185, 0.05652946, 0.08464446]
+        std = [0.13962574, 0.10458517, 0.1558228,  0.14139734]
 
     # Zero-center by mean pixel
     if data_format == 'channels_first':
